@@ -36,6 +36,15 @@ copyright = "Copyright 2022 - Aaron Johnson"
 
   [[menu.main]]
     weight = 2
+    identifier = "notes"
+    pre = ""
+    post = ""
+    name = "Notes"
+    url = "/notes/"
+    title = ""
+
+  [[menu.main]]
+    weight = 3
     identifier = "tags"
     pre = ""
     post = ""
@@ -44,7 +53,7 @@ copyright = "Copyright 2022 - Aaron Johnson"
     title = ""
 
   [[menu.main]]
-    weight = 3
+    weight = 4
     identifier = "categories"
     pre = ""
     post = ""

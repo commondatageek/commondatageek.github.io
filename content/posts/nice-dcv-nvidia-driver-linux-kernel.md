@@ -3,7 +3,6 @@ title: "Troubleshooting NICE DCV on AWS EC2 with Nvidia Drivers"
 date: 2022-07-14T22:45:38-06:00
 draft: false
 
-categories: ["Notes"]
 tags: ["linux", "kernel", "nice-dcv", "nvidia", "drivers", "ubuntu", "20.04"]
 ---
 
