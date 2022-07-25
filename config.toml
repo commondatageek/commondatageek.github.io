@@ -104,7 +104,7 @@ copyright = "Copyright 2022 - Aaron Johnson"
     # Custom content (HTML format is supported)
     custom = ""
     # whether to show Hugo and theme info
-    hugo = true
+    hugo = false
     # whether to show copyright info
     copyright = true
     # whether to show the author
@@ -114,7 +114,7 @@ copyright = "Copyright 2022 - Aaron Johnson"
     # ICP info only in China (HTML format is supported)
     icp = ""
     # license info (HTML format is supported)
-    license= '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
+    license='Powered by <a href="https://gohugo.io/">Hugo</a>'
 
   # Section (all posts) page config
   [params.section]
