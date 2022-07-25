@@ -1,7 +1,7 @@
 ---
 title: "Algolia"
 date: 2022-07-13T00:06:09-06:00
-draft: true
+draft: false
 
 tags: ["algolia", "hugo", "static-site", "search"]
 categories: ["Services"]
