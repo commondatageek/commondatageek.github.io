@@ -173,11 +173,11 @@ copyright = "Copyright 2022 - Aaron Johnson"
       # Gravatar Email for preferred avatar in home page
       gravatarEmail = ""
       # URL of avatar shown in home page
-      avatarURL = "/images/avatar.png"
+      avatarURL = "/images/aaron.jpg"
       # title shown in home page (HTML format is supported)
-      title = ""
+      title = "A collection of stuff and things"
       # subtitle shown in home page (HTML format is supported)
-      subtitle = "Putting it all together"
+      subtitle = "and stuff"
       # whether to use typeit animation for subtitle
       typeit = false
       # whether to show social links
@@ -194,8 +194,8 @@ copyright = "Copyright 2022 - Aaron Johnson"
   # Social config in home page
   [params.social]
     GitHub = "commondatageek"
-    Linkedin = ""
-    Twitter = ""
+    Linkedin = "johnsonaw"
+    Twitter = "commondatageek"
     Instagram = ""
     Facebook = ""
     Telegram = ""
