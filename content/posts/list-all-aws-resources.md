@@ -1,5 +1,5 @@
 ---
-title: "List All AWS Resources"
+title: "Listing all Resources in Your AWS Account"
 date: 2022-08-04T20:56:41-06:00
 draft: false
 
@@ -8,35 +8,46 @@ categories: ["Notes"]
 ---
 
 
-# Listing all Resources in Your AWS Account
-
 Certain situations require one to be able to list all resources in an AWS
 account.
 
 
 ## Why did I need to list all resources?
 
-Management recently decided to move my team to a different part of the
-organization.  The move came with new responsibilities.  This meant that we
-would continue to support some of our existing AWS resources, while a different
-team would take responsibility for others moving forward.
+Management recently decided to assign some new responsibilities to my team in a
+different part of the organization.  We would continue supporting some of our
+existing infrastruction, while a different team would take responsibility for
+the remainder.
 
-Before we could begin to have this conversation and make these negotiations, we
-needed a list of all the resources in our AWS account.
+But we needed to start with a list of all the resources in our AWS account to
+form the basis of these negotiations.
 
 
 ## `aws resourcegroupstaggingapi get-resources`
 
-The documentation[^1] for the `aws resourcegroupstaggingapi get-resources` call
+To be honest, it is currently unclear[^1] to me whether there is any single
+method that will provide a definitive list of all resources in an AWS account.
+
+The documentation[^2] for the `aws resourcegroupstaggingapi get-resources` call
 says that it:
 
-> Returns all the **tagged** or **previously tagged** resources that are located in the
-> specified Amazon Web Services Region for the account.
+> Returns **all the tagged or previously tagged resources** that are located in
+> the specified Amazon Web Services Region for the account.
 
-It is currently unclear[^2] to me whether there is any single method that will
-provide a definitive list of all resources in an AWS account.  But the
-method outlined below works well for us because we have tagged (almost) all of
-our resources.
+So it appears that if you never tagged a specific resource, it won't appear in
+this list.
+
+However, having run this command in our account, it returned an awful many
+resources that do not currently have tags, and I can't imagine that we tagged
+and then intentionally untagged so many resources in our account.
+
+In any case--
+
+The method outlined below works well for us because we have tagged (almost) all
+of our resources.
+
+
+## Examples
 
 Assuming that the AWS CLI is configured, the following command will provide a
 list of all AWS resources.
@@ -45,9 +56,9 @@ list of all AWS resources.
 aws --profile=prod --region=us-west-2 resourcegroupstaggingapi get-resources
 ```
 
-One may use `jq` or similar tools (or even a JMESPath query with the `--query` argument)
-to further filter and refine the JSON-encoded results.  For example, one can
-generate a sorted list of ARNs with the following command.
+One may use `jq` or similar tools (or even a JMESPath query with the `--query`
+argument) to further filter and refine the JSON-encoded results.  For example,
+one can generate a sorted list of ARNs with the following command.
 
 ```bash
 aws resourcegroupstaggingapi get-resources \
@@ -56,5 +67,5 @@ aws resourcegroupstaggingapi get-resources \
  | less
 ```
 
-[^1]: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/resourcegroupstaggingapi/get-resources.html
-[^2]: https://stackoverflow.com/questions/44391817/is-there-a-way-to-list-all-resources-in-aws
+[^1]: https://stackoverflow.com/questions/44391817/is-there-a-way-to-list-all-resources-in-aws
+[^2]: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/resourcegroupstaggingapi/get-resources.html
