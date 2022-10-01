@@ -13,8 +13,8 @@ paginate = 12
 
 copyright = "Copyright 2022 - Aaron Johnson"
 
-# enableGitInfo = true
-# enableEmoji = true
+enableGitInfo = true
+enableEmoji = true
 
 # ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
