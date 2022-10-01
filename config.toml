@@ -7,7 +7,7 @@ hasCJKLanguage = false
 
 title = "Gits and Pieces"
 
-theme = "github.com/dillonzq/LoveIt"
+theme = "github.com/commondatageek/LoveIt"
 
 paginate = 12
 
