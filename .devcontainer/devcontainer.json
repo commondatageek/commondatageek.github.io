@@ -1,0 +1,7 @@
+{
+	"build": { "dockerfile": "Dockerfile" },
+	"mounts": [
+		"source=/Users/aaron-johnson/.vimrc,target=/root/.vimrc,type=bind,consistency=cached",
+		"source=/Users/aaron-johnson/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+	]
+}
