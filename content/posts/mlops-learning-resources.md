@@ -26,12 +26,18 @@ at your company.
 
 ## Books
 
-| Title | Edition | Author | Pub Date | Publisher |
-| :---- | :------ | :----- | :------- | :-------- |
-| [Designing Machine Learning Systems: An Iterative Process for Production-Ready Applications](https://www.amazon.com/Designing-Machine-Learning-Systems-Production-Ready/dp/1098107969) | 1st Edition | Chip Huyen | June 21, 2022 | O'Reilly |
-| [Machine Learning Design Patterns: Solutions to Common Challenges in Data Preparation, Model Building, and MLOps]( https://www.amazon.com/Machine-Learning-Design-Patterns-Preparation/dp/1098115783) | 1st Edition | Lakshmanan, Robinson, Munn | November 10, 2020 | O'Reilly |
-| [MLOps Engineering at Scale](https://www.manning.com/books/mlops-engineering-at-scale?query=mlops) | 1st Edition | Carl Osipov | March 1, 2022 | Manning |
-| [Machine Learning Logistics: Model Management in the Real World](
+| Title | Review | Edition | Author | Pub Date | Publisher |
+| :---- | :----- | :------ | :----- | :------- | :-------- |
+| [Designing Machine Learning Systems: An Iterative Process for Production-Ready Applications](https://www.amazon.com/Designing-Machine-Learning-Systems-Production-Ready/dp/1098107969) | | 1st Edition | Chip Huyen | June 21, 2022 | O'Reilly |
+| [Machine Learning Design Patterns: Solutions to Common Challenges in Data Preparation, Model Building, and MLOps]( https://www.amazon.com/Machine-Learning-Design-Patterns-Preparation/dp/1098115783) | | 1st Edition | Lakshmanan, Robinson, Munn | November 10, 2020 | O'Reilly |
+| [MLOps Engineering at Scale](https://www.manning.com/books/mlops-engineering-at-scale?query=mlops) | | 1st Edition | Carl Osipov | March 1, 2022 | Manning |
+| [Machine Learning Logistics: Model Management in the Real World](https://www.techrepublic.com/resource-library/ebooks/machine-learning-logistics-model-management-in-the-real-world/) | | 1st Edition | Ted Dunning and Ellen Friedman | August 23, 2017 | O'Reilly |
+
+## Presentations
+
+| Title | Presenter | Conference | Date |
+| :---- | :-------- | :--------- | :--- |
+| [MLOps: The Most Important Piece in the Enterprise AI Puzzle](file:///Users/aaron-johnson/Downloads/QConPlus2021-FrancescaLazzeri-MLOpsTheMostImportantPieceintheEnterpriseAIPuzzle.pdf) | Francesca Lazzeri | QCon Plus | 2022-05-06 | 
 
 
 ## Frameworks and Offerings
