@@ -4,7 +4,7 @@ date: 2022-08-04T20:56:41-06:00
 draft: false
 
 tags: ["aws", "aws-cli", "jq", "jmespath"]
-categories: ["Notes"]
+categories: []
 ---
 
 

@@ -4,7 +4,7 @@ date: 2022-07-20T09:51:23-06:00
 draft: false
 
 tags: ["neo4j", "javascript", "d3js"]
-categories: ["Tools", "Notes"]
+categories: ["Tools"]
 
 ---
 

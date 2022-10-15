@@ -4,9 +4,11 @@ date: 2022-07-13T00:06:09-06:00
 draft: false
 
 tags: ["algolia", "hugo", "static-site", "search"]
-categories: ["Services", "Notes"]
+categories: ["Services"]
 
 ---
+
+# Algolia 
 
 Algolia is a service that can provide advanced search capability to your static hugo site.
 
