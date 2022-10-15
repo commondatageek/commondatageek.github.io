@@ -27,11 +27,11 @@ enableEmoji = true
 [menu]
   [[menu.main]]
     weight = 1
-    identifier = "snippets"
+    identifier = "notes"
     pre = ""
     post = ""
-    name = "Snippets"
-    url = "/snippets/"
+    name = "Notes"
+    url = "/notes/"
     title = ""
 
   [[menu.main]]
