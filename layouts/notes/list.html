@@ -1,0 +1,12 @@
+<html>
+    <body>
+        <nav>
+            <a href="{{ .Site.Home.Permalink }}">{{ .Site.Title }}</a>
+        </nav>
+        <ul>
+            {{ range $p := .Pages -}}
+            <li><a href="{{ $p.Permalink }}">{{ $p.Title }}</a></li>    
+            {{- end }}
+        </ul>
+    </body>
+</html>
