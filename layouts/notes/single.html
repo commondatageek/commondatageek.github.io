@@ -1,9 +1,13 @@
-<html>
-    <body>
-        <nav>
-            <a href="{{ .Site.Home.Permalink }}">{{ .Site.Title }}</a>
-            <a href="/notes">Notes</a>
-        </nav>
-        {{ .Content }}
-    </body>
-</html>
+{{ define "title" }}
+    {{ .Site.Title }} - {{ .Page.Title }}
+{{ end }}
+
+{{ define "main" }}
+    <h1 class="title">{{ .Page.Title }}</h1>
+    <p class="subtitle is-6">
+        {{ range $i, $t := .GetTerms "tags" -}}
+            {{ if gt $i 0 -}}, {{ end }}<a href="{{ $t.Permalink }}">{{ $t.LinkTitle }}</a>
+        {{- end }}
+    </p>
+    {{ .Content }}
+{{ end }}

@@ -1,5 +1,7 @@
 baseURL = "https://gitsandpieces.com/"
 
+summaryLength = 15
+
 languageCode = "en-us"
 defaultContentLanguage = "en"
 languageName = "English"
@@ -7,7 +9,8 @@ hasCJKLanguage = false
 
 title = "Gits and Pieces"
 
-theme = "github.com/commondatageek/LoveIt"
+#theme = "github.com/commondatageek/LoveIt"
+theme = "github.com/dillonzq/LoveIt"
 
 paginate = 12
 

@@ -1,12 +1,36 @@
-<html>
-    <body>
-        <nav>
-            <a href="{{ .Site.Home.Permalink }}">{{ .Site.Title }}</a>
-        </nav>
-        <ul>
-            {{ range $p := .Pages -}}
-            <li><a href="{{ $p.Permalink }}">{{ $p.Title }}</a></li>    
-            {{- end }}
-        </ul>
-    </body>
-</html>
+{{ define "title" }}
+    All {{ .Section | title }} - {{ .Site.Title }}
+{{ end }}
+
+{{ define "main" }}
+    <div class="columns is-mobile is-centered">
+        <div class="column is-narrow">
+            <h1 class="title">{{ .Section | title }}</h1>
+        </div>
+    </div>
+    <hr>
+    <div class="columns is-multiline">
+        {{ range $p := .Pages.ByLastmod -}}
+            <div class="column is-half-tablet is-one-third-desktop">
+                <div class="has-background-warning-light card" style="height: 100%">
+                    <div class="card-content is-flex-direction-column is-flex is-justify-content-space-around" style="height: 100%">
+                        <div class="block is-flex-grow-0 is-size-5">
+                            <a href="{{ $p.Permalink }}">{{ $p.Title }}</a>
+                            <hr class="my-0 py-0">
+                        </div>
+                        <div class="block is-flex-grow-0">{{ .Page.Summary }} ...</div>
+                        <div class="block is-flex-grow-1"></div>
+                        <div class="block is-flex-grow-0 is-size-7">
+                            {{ with .GetTerms "tags" }}
+                                <i class="fa-solid fa-tags"></i>
+                                {{ range $i, $t := . -}}
+                                    {{ if gt $i 0 -}}, {{ end }}<a href="{{ $t.Permalink }}">{{ $t.LinkTitle }}</a>
+                                {{- end }}
+                            {{ end }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{- end }}
+    </div>
+{{ end }}

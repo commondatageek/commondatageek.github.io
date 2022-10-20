@@ -1,5 +1,5 @@
 ---
-title: "Mlops Definition"
+title: "MLOps Definition"
 date: 2022-09-19T23:39:11-06:00
 draft: true
 

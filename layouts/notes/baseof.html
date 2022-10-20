@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html class="has-background-light">
+    <head>
+        <title>
+            {{ block "title" .}}
+                {{ .Site.Title }}
+            {{ end }}
+        </title>
+        <link href="/css/gitsandpieces.css" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/45c0ab19e8.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="content">
+
+        <header>
+            <div class="container box">
+                <nav class="navbar has-text-weight-bold"> 
+                    <div class="navbar-brand">
+                        <a class="navbar-item" href="{{ .Site.Home.Permalink }}">{{ .Site.Title }}</a>
+                    </div>
+                    <div class="navbar-menu">
+                        <div class="navbar-end">
+                            {{ range $m := .Site.Menus.main }}
+                                <a class="navbar-item" href="{{ $m.URL }}">{{ $m.Name }}</a>
+                            {{ end }}
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <div class="container box">
+                {{ block "main" . }}
+                {{ end }}
+            </div>
+        </main>
+
+        <footer class="container box footer content has-text-centered">
+            <p><strong>&copy;2022 Aaron Johnson</strong></p>
+            <p class="is-size-7">The views I express are mine alone and do not represent the Galactic Republic, the neighborhood charity bake sale, or my employer.</p>
+        </footer>
+
+    </body>
+</html>
+ 
