@@ -1,7 +1,7 @@
 ---
 title: "Chapter 02: What Matters in Model Management"
 date: 2022-08-31T05:19:06Z
-draft: true
+draft: false
 
 tags: ["mlops", "machine-learning"]
 categories: []

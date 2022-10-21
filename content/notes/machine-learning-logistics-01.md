@@ -1,7 +1,7 @@
 ---
 title: "Chapter 01: Why Model Management?"
 date: 2022-08-31T05:01:23Z
-draft: true
+draft: false
 
 tags: ["mlops", "machine-learning"]
 categories: []

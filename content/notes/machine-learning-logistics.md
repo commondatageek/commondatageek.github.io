@@ -1,7 +1,7 @@
 ---
 title: "Machine Learning Logistics - Model Management in the Real World"
 date: 2022-08-31T05:51:37Z
-draft: true
+draft: false
 
 tags: ["mlops", "machine-learning", "rendezvous-architecture"]
 categories: []

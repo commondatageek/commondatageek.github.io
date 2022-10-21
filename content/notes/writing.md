@@ -1,7 +1,7 @@
 ---
 title: "Writing"
 date: 2022-08-29T15:42:16-06:00
-draft: true
+draft: false
 
 tags: []
 categories: []
