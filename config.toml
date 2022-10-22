@@ -23,7 +23,6 @@ enableEmoji = true
 
 [author]
   name = "Aaron Johnson"
-  email = "ajmagnifico@gmail.com"
   link = "https://github.com/commondatageek"
 
 # Menu config
@@ -81,6 +80,12 @@ enableEmoji = true
   description = "A blog"
   # website images for Open Graph and Twitter Cards
   images = ["/logo.png"]
+
+  [params.contact]
+    tld = "com"
+    domain = "gmail"
+    username = "commondatageek"
+    delay = 3000
 
   # Header config
   [params.header]

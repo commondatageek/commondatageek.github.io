@@ -37,9 +37,27 @@
         </main>
 
         <footer class="container box footer content has-text-centered">
+            <p class="is-size-6">The views I express are mine alone and do not represent the Galactic Republic, the neighborhood charity bake sale, or my employer.</p>
+            <p>Questions or comments? send me an <a id="cta" href=""><span class="tag is-link">Email</span></a>!</p> 
             <p><strong>&copy;{{ now.Format "2006" }} Aaron Johnson</strong></p>
-            <p class="is-size-7">The views I express are mine alone and do not represent the Galactic Republic, the neighborhood charity bake sale, or my employer.</p>
         </footer>
+
+        <script>
+            var upd = document.getElementById("cta");
+            var tld = "{{ .Site.Params.Contact.Tld }}"
+            var domain = "{{ .Site.Params.Contact.Domain }}"
+            var account = "{{ .Site.Params.Contact.Username }}"
+            var prefix = "mailto"
+            setTimeout(
+                ()  => {
+                    upd.setAttribute(
+                        "href",
+                        prefix+":"+account+"@"+domain+"."+tld
+                    );
+                },
+                {{ .Site.Params.Contact.Delay }}
+            );
+        </script>
 
     </body>
 </html>
