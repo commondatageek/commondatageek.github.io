@@ -10,12 +10,12 @@
     </div>
     <hr>
     <div class="columns is-multiline">
-        {{ range $p := .Pages.ByLastmod -}}
+        {{ range .Pages.ByLastmod -}}
             <div class="column is-half-tablet is-one-third-desktop">
                 <div class="has-background-warning-light card" style="height: 100%">
                     <div class="card-content is-flex-direction-column is-flex is-justify-content-space-around" style="height: 100%">
                         <div class="is-flex-grow-0 is-size-5">
-                            {{ $p.Title }}
+                            {{ .Title }}
                             <hr class="my-0 py-0">
                         </div>
                         <div class="block is-flex-grow-0">
@@ -31,7 +31,7 @@
                         {{ else }}
                             {{ $summaryLen = len .RawContent }}
                         {{ end }}
-                        <a href="{{ $p.Permalink }}">
+                        <a href="{{ .Permalink }}">
                             <div style="font-size: 0.5rem !important" class="block box is-flex-grow-0">
                                 {{ .RenderString (replaceRE "</?a[^a-z][^>]*>" "" (delimit (first .Site.Params.betterSummaryLength (split .Page.RawContent " ")) " " | markdownify )) }}
                                 {{ if gt .WordCount .Site.Params.betterSummaryLength }}
