@@ -10,7 +10,7 @@
     </div>
     <hr>
     <div class="columns is-multiline">
-        {{ range .Pages.ByLastmod -}}
+        {{ range .Pages.ByLastmod.Reverse -}}
             <div class="column is-half-tablet is-one-third-desktop">
                 <div class="has-background-warning-light card" style="height: 100%">
                     <div class="card-content is-flex-direction-column is-flex is-justify-content-space-around" style="height: 100%">
