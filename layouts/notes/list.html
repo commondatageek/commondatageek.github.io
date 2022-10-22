@@ -20,12 +20,11 @@
                         </div>
                         <div class="block is-flex-grow-0">{{ .Page.Summary }} ...</div>
                         <div class="block is-flex-grow-1"></div>
-                        <div class="block is-flex-grow-0 is-size-7 has-text-right">
+                        <div class="block is-flex-grow-0 has-text-right">
                             {{ with .GetTerms "tags" }}
-                                <i class="fa-solid fa-tags"></i>
-                                {{ range $i, $t := . -}}
-                                    {{ if gt $i 0 -}}, {{ end }}<a href="{{ $t.Permalink }}">{{ $t.LinkTitle }}</a>
-                                {{- end }}
+                                {{ range $i, $t := . }}
+                                    <a href="{{ $t.Permalink }}"><span class="tag is-warning">{{ $t.LinkTitle }}</span></a>
+                                {{ end }}
                             {{ end }}
                         </div>
                     </div>
