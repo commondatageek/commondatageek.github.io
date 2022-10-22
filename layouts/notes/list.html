@@ -33,10 +33,8 @@
                         {{ end }}
                         <a href="{{ .Permalink }}">
                             <div style="font-size: 0.5rem !important" class="block box is-flex-grow-0">
-                                {{ .RenderString (replaceRE "</?a[^a-z][^>]*>" "" (delimit (first .Site.Params.betterSummaryLength (split .Page.RawContent " ")) " " | markdownify )) }}
-                                {{ if gt .WordCount .Site.Params.betterSummaryLength }}
-                                    <div class="has-text-centered is-size-3">...</div>
-                                {{ end }}</div>
+                                {{ partial "bettersummary" . }}
+                            </div>
                         </a>
                         <div class="is-flex-grow-1"></div>
                     </div>
