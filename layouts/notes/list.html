@@ -20,7 +20,7 @@
                         </div>
                         <div class="block is-flex-grow-0">{{ .Page.Summary }} ...</div>
                         <div class="block is-flex-grow-1"></div>
-                        <div class="block is-flex-grow-0 is-size-7">
+                        <div class="block is-flex-grow-0 is-size-7 has-text-right">
                             {{ with .GetTerms "tags" }}
                                 <i class="fa-solid fa-tags"></i>
                                 {{ range $i, $t := . -}}
