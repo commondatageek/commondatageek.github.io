@@ -1,0 +1,8 @@
+.lntd:first-child {
+    min-width: 1.6rem;
+    text-align: right;
+}
+
+.highlight>.chroma .lntd:last-child {
+    width: 100%;
+}
