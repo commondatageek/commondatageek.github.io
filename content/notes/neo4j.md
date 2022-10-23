@@ -11,7 +11,7 @@ categories: ["Tools"]
 # Neo4j
 
 ## Set up development server in a docker container
-```
+```bash
 docker run \
     --publish=7474:7474 --publish=7687:7687 \
     --volume=$HOME/neo4j/data:/data \
@@ -19,13 +19,18 @@ docker run \
     neo4j
 ```
 
+<!--more-->
 
 ## use neo4j from javascript
 https://neo4j.com/developer/javascript/
 
-```
+First, install the `neo4j-driver` package:
+
+```bash
 npm install neo4j-driver
 ```
+
+Then, this is how you use it in Javascript:
 
 ```javascript
 const neo4j = require('neo4j-driver')

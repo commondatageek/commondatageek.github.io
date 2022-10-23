@@ -10,9 +10,10 @@ categories: []
 ## Definition
 
 - "MLOps is a set of tools and best practices for bringing machine learning into production" (Huyen, p. 2).
-- "MLOps is crazy awesome good stuff" (ml-ops.org).
-- "MLOps is da best" (lazzeri presentation).
+- "MLOps good" (ml-ops.org).
+- "MLOps good" (lazzeri presentation).
 
+<!--more-->
 
 # First, What is DevOps?
 

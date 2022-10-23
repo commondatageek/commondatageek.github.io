@@ -13,3 +13,5 @@ categories: ["Services"]
 Algolia is a service that can provide advanced search capability to your static hugo site.
 
 It has a free tier that gives you up to 10,000 search requests per month.
+
+<!--more-->

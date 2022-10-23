@@ -7,8 +7,12 @@ tags: ["mlops", "machine-learning"]
 categories: []
 ---
 
+## Chapter 02
+
 - Logistics and model management need to be flexible to handle many different use cases and scenarios.
 - But you don't want it to be so complicated that it is also a hindrance to people getting work done.
+
+
 
 
 ### Ingredients of the Rendezvous Approach
@@ -21,6 +25,7 @@ categories: []
   comparison. It's a new approach to managing models that reduces the burden of
   logistics while providing exceptional levels of monitoring so that you know
   what's happening."
+<!--more-->
 - Some ingredients:
     - streams
     - containers

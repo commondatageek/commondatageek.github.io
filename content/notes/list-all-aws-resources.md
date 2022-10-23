@@ -7,12 +7,10 @@ tags: ["aws", "aws-cli", "jq", "jmespath"]
 categories: []
 ---
 
+## Why did I need to list all resources?
 
 Certain situations require one to be able to list all resources in an AWS
 account.
-
-
-## Why did I need to list all resources?
 
 Management recently decided to assign some new responsibilities to my team in a
 different part of the organization.  We would continue supporting some of our
@@ -22,6 +20,7 @@ the remainder.
 But we needed to start with a list of all the resources in our AWS account to
 form the basis of these negotiations.
 
+<!--more-->
 
 ## `aws resourcegroupstaggingapi get-resources`
 

@@ -14,3 +14,5 @@ categories: []
 - Talks about the whole system from start to finish
 - The book may be a bit dated, as it was published in 2017.
 - The book itself provides useful content.  It's not just marketing material.  Every now and then, you see "tools like MapR Convergent Data Platform", etc.
+
+<!--more-->
