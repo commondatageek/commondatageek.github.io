@@ -1,7 +1,5 @@
 baseURL = "https://gitsandpieces.dev/"
 
-summaryLength = 15
-
 languageCode = "en-us"
 defaultContentLanguage = "en"
 languageName = "English"
@@ -64,7 +62,6 @@ enableEmoji = true
     title = ""
 
 [params]
-  betterSummaryLength = 75
   # site default theme ["auto", "light", "dark"]
   defaultTheme = "auto"
   # public git repo url only then enableGitInfo is true

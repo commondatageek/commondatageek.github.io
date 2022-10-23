@@ -1,4 +1,0 @@
-{{ .RenderString (replaceRE "</?a[^a-z][^>]*>" "" (delimit (first .Site.Params.betterSummaryLength (split .RawContent " ")) " " | markdownify )) }}
-{{ if gt .WordCount .Site.Params.betterSummaryLength }}
-    <div class="has-text-centered is-size-3">...</div>
-{{ end }}

@@ -25,15 +25,9 @@
                                 {{ end }}
                             {{ end }}
                         </div>
-                        {{ $summaryLen := 0 }}
-                        {{ if gt (len .RawContent) .Site.Params.betterSummaryLength }}
-                            {{ $summaryLen = .Site.Params.betterSummaryLength }}
-                        {{ else }}
-                            {{ $summaryLen = len .RawContent }}
-                        {{ end }}
                         <a href="{{ .Permalink }}">
                             <div style="font-size: 0.5rem !important" class="block box is-flex-grow-0">
-                                {{ partial "bettersummary" . }}
+                                {{ .Summary }}
                             </div>
                         </a>
                         <div class="is-flex-grow-1"></div>
