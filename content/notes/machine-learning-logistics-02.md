@@ -6,7 +6,7 @@ weight: 3
 
 tags: ["mlops", "machine-learning"]
 categories: ["MLOps"]
-series: "Machine Learning Logistics: Model Management in the Real World"
+series: "Machine Learning Logistics"
 ---
 
 ## Chapter 02
@@ -100,7 +100,4 @@ series: "Machine Learning Logistics: Model Management in the Real World"
       look at its input data and record it, preferably in a data stream."
     - See Chapter 04 for more info on decoy models
 
-{{< info >}}
-    This note is part of a series of notes from a book entitled: "Machine Learning Logistics: Model Management in the Real World" by Ted Dunning and Ellen Friedman
-    {{< series "Machine Learning Logistics: Model Management in the Real World" >}}
-{{< /info >}}
+{{< series "MLL" >}}

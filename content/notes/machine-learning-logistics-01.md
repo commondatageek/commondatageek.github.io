@@ -6,7 +6,7 @@ weight: 2
 
 tags: ["mlops", "machine-learning"]
 categories: ["MLOps"]
-series: "Machine Learning Logistics: Model Management in the Real World"
+series: "Machine Learning Logistics"
 ---
 
 # Machine Learning Logistics Book
@@ -85,7 +85,4 @@ controlled environments."
 - Some sample questions you might ask as you think through machine learning
   logistics and model management
 
-{{< info >}}
-    This note is part of a series of notes from a book entitled: "Machine Learning Logistics: Model Management in the Real World" by Ted Dunning and Ellen Friedman
-    {{< series "Machine Learning Logistics: Model Management in the Real World" >}}
-{{< /info >}}
+{{< series "MLL" >}}

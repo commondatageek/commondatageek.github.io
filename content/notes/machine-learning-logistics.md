@@ -6,7 +6,7 @@ weight: 1
 
 tags: ["mlops", "machine-learning", "rendezvous-architecture"]
 categories: ["MLOps"]
-series: "Machine Learning Logistics: Model Management in the Real World"
+series: "Machine Learning Logistics"
 ---
 
 - O'Reilly book by Ted Dunning and Ellen Friedman
@@ -19,7 +19,4 @@ series: "Machine Learning Logistics: Model Management in the Real World"
 
 <!--more-->
 
-{{< info >}}
-    This note is part of a series of notes from a book entitled: "Machine Learning Logistics: Model Management in the Real World" by Ted Dunning and Ellen Friedman
-    {{< series "Machine Learning Logistics: Model Management in the Real World" >}}
-{{< /info >}}
+{{< series "MLL" >}}

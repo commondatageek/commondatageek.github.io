@@ -1,15 +1,25 @@
-{{/* https://www.kiroule.com/article/add-series-taxonomy-to-hugo-theme/ */}}
+{{/* https://www.kiroule.com/article/add-series-taxonomy-to-hugo-theme/ with some modifications from me */}}
 
-{{ $series_name := .Get 0 | urlize }}
+{{ $series_text := $.Page.Params.series }}
+{{ $series_name := $series_text | urlize }}
+{{ $series_info := .Get 0 }}
 
 {{ range $key, $taxonomy := .Site.Taxonomies.series }}
     {{ if eq $key $series_name }}
-    <ul>
-        {{ range $taxonomy.Pages.ByWeight }}
-        <li hugo-nav="{{ .RelPermalink }}">
-            <a href="{{ .Permalink }}">{{ .LinkTitle }}</a>
-        </li>
-        {{ end }}
-    </ul>
+    <section class="section">
+        <aside class="message is-info is-light">
+            <div class="message-header">{{ $series_text }}</div>
+            <div class="message-body">
+                {{ partial (printf "series/%s" $series_info) }}
+                <ul>
+                    {{ range $taxonomy.Pages.ByWeight }}
+                    <li hugo-nav="{{ .RelPermalink }}">
+                        <a href="{{ .Permalink }}">{{ .LinkTitle }}</a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </div>
+        </aside>
+    </section>
     {{ end }}
 {{ end }}
