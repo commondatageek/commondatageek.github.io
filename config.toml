@@ -5,7 +5,7 @@ defaultContentLanguage = "en"
 languageName = "English"
 hasCJKLanguage = false
 
-title = "Gits and Pieces"
+title = "Gits and Pieces" #AWJ
 
 #theme = "github.com/commondatageek/LoveIt"
 theme = "github.com/dillonzq/LoveIt"
@@ -19,13 +19,19 @@ enableEmoji = true
 
 # ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
+[taxonomies] #AWJ
+  tag = "tags"
+  category = "categories"
+  series = "series"
+
+
 [author]
   name = "Aaron Johnson"
   link = "https://github.com/commondatageek"
 
 # Menu config
 [menu]
-  [[menu.main]]
+  [[menu.main]] #AWJ
     weight = 1
     identifier = "notes"
     pre = ""

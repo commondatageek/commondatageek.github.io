@@ -2,9 +2,11 @@
 title: "Chapter 01: Why Model Management?"
 date: 2022-08-31T05:01:23Z
 draft: false
+weight: 2
 
 tags: ["mlops", "machine-learning"]
-categories: []
+categories: ["MLOps"]
+series: "Machine Learning Logistics: Model Management in the Real World"
 ---
 
 # Machine Learning Logistics Book
@@ -82,3 +84,8 @@ controlled environments."
 
 - Some sample questions you might ask as you think through machine learning
   logistics and model management
+
+{{< info >}}
+    This note is part of a series of notes from a book entitled: "Machine Learning Logistics: Model Management in the Real World" by Ted Dunning and Ellen Friedman
+    {{< series "Machine Learning Logistics: Model Management in the Real World" >}}
+{{< /info >}}

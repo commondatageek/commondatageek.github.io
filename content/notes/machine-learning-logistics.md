@@ -2,9 +2,11 @@
 title: "Machine Learning Logistics - Model Management in the Real World"
 date: 2022-08-31T05:51:37Z
 draft: false
+weight: 1
 
 tags: ["mlops", "machine-learning", "rendezvous-architecture"]
-categories: []
+categories: ["MLOps"]
+series: "Machine Learning Logistics: Model Management in the Real World"
 ---
 
 - O'Reilly book by Ted Dunning and Ellen Friedman
@@ -16,3 +18,8 @@ categories: []
 - The book itself provides useful content.  It's not just marketing material.  Every now and then, you see "tools like MapR Convergent Data Platform", etc.
 
 <!--more-->
+
+{{< info >}}
+    This note is part of a series of notes from a book entitled: "Machine Learning Logistics: Model Management in the Real World" by Ted Dunning and Ellen Friedman
+    {{< series "Machine Learning Logistics: Model Management in the Real World" >}}
+{{< /info >}}
