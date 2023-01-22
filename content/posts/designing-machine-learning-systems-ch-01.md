@@ -5,6 +5,7 @@ draft: true
 
 tags: ["mlops"]
 categories: ["MLOps", "Designing Machine Learning Systems"]
+series: ["Designing Machine Learning Systems"]
 ---
 
 ## Key Vocab
@@ -87,3 +88,6 @@ Words
     - it's not cost-effective
 
 ### Differences Between Research ML and Production ML
+
+
+{{< series "DMLS-Huyen" >}}
