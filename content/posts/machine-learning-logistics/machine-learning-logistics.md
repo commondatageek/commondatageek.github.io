@@ -2,11 +2,9 @@
 title: "Machine Learning Logistics - Model Management in the Real World"
 date: 2022-08-31T05:51:37Z
 draft: false
-weight: 1
 
 tags: ["mlops", "machine-learning", "rendezvous-architecture"]
 categories: ["MLOps"]
-series: "Machine Learning Logistics"
 ---
 
 - O'Reilly book by Ted Dunning and Ellen Friedman
@@ -19,4 +17,3 @@ series: "Machine Learning Logistics"
 
 <!--more-->
 
-{{< series "MLL" >}}

@@ -2,11 +2,9 @@
 title: "Chapter 02: What Matters in Model Management"
 date: 2022-08-31T05:19:06Z
 draft: false
-weight: 3
 
 tags: ["mlops", "machine-learning"]
 categories: ["MLOps"]
-series: "Machine Learning Logistics"
 ---
 
 ## Chapter 02
@@ -99,5 +97,3 @@ series: "Machine Learning Logistics"
 	  model or models being developed, but the decoy doesn't do anything except
       look at its input data and record it, preferably in a data stream."
     - See Chapter 04 for more info on decoy models
-
-{{< series "MLL" >}}

@@ -2,11 +2,9 @@
 title: "Chapter 01: Why Model Management?"
 date: 2022-08-31T05:01:23Z
 draft: false
-weight: 2
 
 tags: ["mlops", "machine-learning"]
 categories: ["MLOps"]
-series: "Machine Learning Logistics"
 ---
 
 # Machine Learning Logistics Book
@@ -84,5 +82,3 @@ controlled environments."
 
 - Some sample questions you might ask as you think through machine learning
   logistics and model management
-
-{{< series "MLL" >}}
