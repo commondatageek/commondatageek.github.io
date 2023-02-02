@@ -4,8 +4,12 @@ date: 2022-09-19T23:39:11-06:00
 draft: false
 
 tags: ["mlops"]
-categories: []
+categories: ["MLOps"]
 ---
+
+_Some notes on how people are defining MLOps and what general principles we can draw from that._
+
+<!--more-->
 
 ## Definition
 
@@ -13,9 +17,7 @@ categories: []
 - "MLOps good" (ml-ops.org).
 - "MLOps good" (lazzeri presentation).
 
-<!--more-->
-
-# First, What is DevOps?
+## First, What is DevOps?
 
 You've probably heard of DevOps before, and understanding this will help us to better understand MLOps.
 
