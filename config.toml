@@ -6,6 +6,43 @@ theme = "github.com/Vimux/Mainroad"
 disqusShortname = "" # Enable comments by entering your Disqus shortname
 googleAnalytics = "" # Enable Google Analytics by entering your tracking id
 
+[menu]
+  [[menu.main]]
+    weight = 1
+    identifier = "posts"
+    pre = ""
+    post = ""
+    name = "Posts"
+    url = "/posts/"
+    title = ""
+
+  [[menu.main]]
+    weight = 2
+    identifier = "notes"
+    pre = ""
+    post = ""
+    name = "Notes"
+    url = "/notes/"
+    title = ""
+
+  [[menu.main]]
+    weight = 3
+    identifier = "tags"
+    pre = ""
+    post = ""
+    name = "Tags"
+    url = "/tags/"
+    title = ""
+
+  [[menu.main]]
+    weight = 4
+    identifier = "categories"
+    pre = ""
+    post = ""
+    name = "Categories"
+    url = "/categories/"
+    title = ""
+
 [Author]
   name = "Aaron Johnson"
   bio = "Sometimes I write things."
