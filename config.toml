@@ -59,7 +59,7 @@ googleAnalytics = "" # Enable Google Analytics by entering your tracking id
   mainSections = ["posts", "docs"]
 
 [Params.logo]
-  subtitle = "All the things" # Logo subtitle
+  subtitle = "write down all the things" # Logo subtitle
 
 [Params.sidebar]
   home = "right"   # Configure layout for home page
