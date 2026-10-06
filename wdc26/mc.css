@@ -133,7 +133,7 @@ pre.logic .f { color: #8fc2ff; }
 #hist { display: flex; align-items: flex-end; gap: .25rem; height: 10rem; padding-top: .5rem; border-bottom: 2px solid var(--line); }
 #hist .col { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
 #hist .col .b { width: 100%; background: #b9cff2; border-radius: .25rem .25rem 0 0; transition: height .3s; }
-#hist .col.in85 .b { background: var(--accent); }
+
 #hist-axis { display: flex; gap: .25rem; margin-top: .3rem; }
 #hist-axis span { flex: 1; min-width: 0; text-align: center; font-size: .8rem; color: var(--muted); }
 .hist-empty { color: var(--muted); align-self: center; margin: auto; font-size: 1.05rem; }
@@ -158,11 +158,11 @@ pre.logic .f { color: #8fc2ff; }
 header.has-triangle { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; }
 header.has-triangle .header-text { flex: 1; min-width: 0; }
 
-nav.triangle { flex: none; width: 13rem; text-align: center; }
+nav.triangle { flex: none; width: 15rem; text-align: center; }
 nav.triangle svg { width: 100%; height: auto; display: block; overflow: visible; }
 nav.triangle .edges { fill: none; stroke: var(--line); stroke-width: 3; stroke-linejoin: round; }
-nav.triangle .lbl { font-size: 11px; font-weight: 700; letter-spacing: .08em; fill: var(--muted); }
-nav.triangle .lbl-sub { font-size: 10px; letter-spacing: .04em; fill: #9aa4b2; }
+nav.triangle .lbl { font-size: 12px; font-weight: 700; letter-spacing: .08em; fill: var(--muted); }
+nav.triangle .lbl-sub { font-size: 11px; letter-spacing: .04em; fill: #9aa4b2; }
 nav.triangle .val { font-size: 15px; font-weight: 700; fill: var(--ink); }
 nav.triangle .node circle { fill: #fff; stroke: var(--accent); stroke-width: 2.5; transition: fill .15s; }
 nav.triangle a.node { cursor: pointer; }

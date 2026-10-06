@@ -3,17 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Monte Carlo Throughput Simulation: Sampling Random Days</title>
+<title>Monte Carlo: How Many Days to Finish N Items?</title>
 <link rel="stylesheet" href="mc.css">
 </head>
 <body>
 <div id="stage">
-  <header>
-    <h1>Simulating the future by replaying random days from the past</h1>
-    <p>Each simulated day is a randomly drawn day from our own history. Repeat until the work is done, then repeat the whole thing thousands of times.</p>
+  <header class="has-triangle">
+    <div class="header-text">
+      <h1>How many days to finish <span id="h-items">10</span> items?</h1>
+      <p>Replay random days from our past until the work is done. Repeat thousands of times, then read the days at your chosen confidence.</p>
+    </div>
+    <nav class="triangle" id="triangle"></nav>
   </header>
 
   <div class="controls">
+    <div class="params">
+      <label>Items <input type="number" id="p-items" step="1"></label>
+      <label>Confidence % <input type="number" id="p-confidence" step="1"></label>
+    </div>
     <button class="primary" id="btn-draw">Draw a day <kbd>Space</kbd></button>
     <button id="btn-auto">Auto-play one run <kbd>A</kbd></button>
     <button id="btn-many">Run 1,000 simulations <kbd>M</kbd></button>
@@ -25,11 +32,12 @@
     <!-- LEFT: the pool -->
     <section class="panel">
       <h2><span class="step">1</span>Throughput sample pool</h2>
-      <p class="sub">Issues our team marked <b>Complete</b> each working day, last 30 days</p>
+      <p class="sub">Issues our whole team marked <b>Complete</b> each day, last <span id="pool-n"></span> days (weekends included)</p>
       <div id="pool"></div>
       <p class="pool-note">
         Order doesn't matter: this is a <b>bag of days</b>. Every day is equally likely to be drawn,
         and a drawn day goes <b>back in the bag</b> (sampling with replacement).
+        Weekends are in the bag too: some have a completion or two, most have none, just like real life.
       </p>
       <div id="freq"></div>
     </section>
@@ -46,13 +54,14 @@
       </div>
 
       <div id="slots"></div>
-      <div id="status">Press <b>Space</b> or click "Draw a day" to simulate the first future day.</div>
+      <div id="status"></div>
 
 <pre class="logic"><span class="k">while</span> total &lt; goal:
     day    = <span class="f">random_choice</span>(pool)   <span class="c"># any day, equal odds, with replacement</span>
     total += day
     days  += 1
 <span class="k">return</span> days                        <span class="c"># one possible "days to finish"</span></pre>
+      <p class="cli">In the forecast tool: <code id="cli"></code></p>
     </section>
   </div>
 
@@ -60,12 +69,12 @@
   <section class="panel hist-panel">
     <div style="display:flex; align-items:center;">
       <h2><span class="step">3</span>Repeat it thousands of times</h2>
-      <span class="legend"><i></i> runs that finished on or before the 85th percentile</span>
+      <span class="legend"><i></i> <span id="legend-text"></span></span>
     </div>
     <p class="sub">Every finished run adds one result: "days to finish". The pile-up is your forecast.</p>
     <div id="hist"></div>
     <div id="hist-axis"></div>
-    <div class="axis-title">Days to finish the goal</div>
+    <div class="axis-title" id="axis-title"></div>
     <div class="hist-meta" id="hist-meta"></div>
   </section>
 </div>
@@ -73,30 +82,72 @@
 <script src="mc.js"></script>
 <script>
 (() => {
-  const POOL = MC.DEFAULT_POOL;
-  const GOAL = 10;
+  const params = MC.readParams();
+  const POOL = params.pool;
+  const MEAN = MC.mean(POOL);
 
   const $ = (id) => document.getElementById(id);
   const stage = $('stage');
   const { sleep, rand, cls } = MC;
-  const PACE_FAST = { flickerSteps: 3, flickerDelay: 45, flyMs: 320 };
-  const PACE_SLOW = { flickerSteps: 8, flickerDelay: 70, flyMs: 700 };
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
   const state = { days: [], total: 0, done: false, busy: false, auto: false, results: [] };
 
   const poolView = MC.mountPool($('pool'), $('freq'), POOL);
   const poolTiles = poolView.tiles;
+  $('pool-n').textContent = POOL.length;
 
-  $('goal-n').textContent = GOAL;
-  $('goal-n2').textContent = GOAL;
-
-  // ---------------- one simulated day ----------------
   const slotsEl = $('slots');
+  const INITIAL_STATUS = 'Press <b>Space</b> or click "Draw a day" to simulate the first future day.';
 
-  function renderEmptySlots() {
-    slotsEl.innerHTML = '<span class="empty-msg">Future days will appear here…</span>';
+  const expectedDays = () => Math.ceil(params.items / MEAN);
+
+  // ---------------- params ----------------
+  const inputs = { items: $('p-items'), confidence: $('p-confidence') };
+
+  function setLocked(locked) {
+    Object.values(inputs).forEach((i) => (i.disabled = locked));
+  }
+  function setBusy(busy) {
+    state.busy = busy;
+    setLocked(state.busy || state.auto);
   }
 
+  function syncParamUi() {
+    inputs.items.value = params.items;
+    inputs.confidence.value = params.confidence;
+    $('h-items').textContent = params.items;
+    $('goal-n').textContent = params.items;
+    $('goal-n2').textContent = params.items;
+    $('axis-title').textContent = `Days to finish ${params.items} items`;
+    $('cli').textContent = `forecast sim days -input linear.db -whole-team -items ${params.items} -confidence ${params.confidence}`;
+  }
+
+  function applyParams() {
+    resetRun();
+    state.results = [];
+    poolView.clear();
+    syncParamUi();
+    MC.writeParams(params);
+    renderHist();
+    setStatus(INITIAL_STATUS);
+  }
+
+  Object.entries(inputs).forEach(([key, input]) => {
+    input.min = MC.LIMITS[key][0];
+    input.max = MC.LIMITS[key][1];
+    input.addEventListener('change', () => {
+      let v = parseInt(input.value, 10);
+      if (Number.isNaN(v)) v = params[key];
+      v = clamp(v, MC.LIMITS[key][0], MC.LIMITS[key][1]);
+      input.value = v;
+      if (v === params[key]) return;
+      params[key] = v;
+      applyParams();
+    });
+  });
+
+  // ---------------- one simulated day ----------------
   function setStatus(html, done = false) {
     const s = $('status');
     s.innerHTML = html;
@@ -110,47 +161,57 @@
     $('total').textContent = 0;
     $('progress').classList.remove('done');
     $('progress').firstElementChild.style.width = '0%';
-    renderEmptySlots();
-    poolTiles.forEach((t) => t.classList.remove('picked', 'flicker'));
+    slotsEl.className = MC.slotDensity(expectedDays());
+    slotsEl.innerHTML = '<span class="empty-msg">Future days will appear here…</span>';
+    poolView.clear();
   }
 
-  async function drawDay(fast = false) {
-    if (state.busy) return;
-    if (state.done) resetRun();
-    state.busy = true;
-
-    if (state.days.length === 0) slotsEl.innerHTML = '';
-
+  function pickDay() {
     const idx = rand(POOL.length);
-    const value = POOL[idx];
-    const dayNo = state.days.length + 1;
-    const pace = fast ? PACE_FAST : PACE_SLOW;
+    return { idx, value: POOL[idx] };
+  }
 
-    setStatus(`Day ${dayNo}: picking a random day from the pool…`);
-    await MC.flicker(poolTiles, idx, pace);
-
-    // create destination slot (value hidden until the chip lands)
+  function addSlot(pick) {
+    if (state.days.length === 0) slotsEl.innerHTML = '';
     const slot = document.createElement('div');
     slot.className = 'slot';
     slot.innerHTML =
-      `<div class="lbl">Day ${dayNo}</div><div class="tile pending">${value}</div><div class="cum"></div>`;
+      `<div class="lbl">Day ${state.days.length + 1}</div><div class="tile pending">${pick.value}</div><div class="cum"></div>`;
     slotsEl.appendChild(slot);
+    return slot;
+  }
+
+  function markPicked(idx) {
+    poolTiles.forEach((t) => t.classList.remove('picked', 'flicker'));
+    poolTiles[idx].classList.add('picked');
+  }
+
+  async function animateDay(pick, slot, pace) {
+    await MC.flicker(poolTiles, pick.idx, pace);
+    await MC.fly(stage, poolTiles[pick.idx], slot.querySelector('.tile'), pick.value, pace);
+  }
+
+  function dayStatus(value) {
+    return value === 0
+      ? 'Drew a <b>0</b> day: nothing finished. Total still ' + state.total + '.'
+      : `Drew a day with <b>${value}</b> completed issue${value === 1 ? '' : 's'}. Total is now ${state.total}.`;
+  }
+
+  // Updates totals, slot contents, frequency highlight, progress bar and status.
+  // `quiet` skips the per-day status text (instant autoplay writes it once per tick).
+  function applyDay(pick, slot, quiet) {
     const slotTile = slot.querySelector('.tile');
-
-    await MC.fly(stage, poolTiles[idx], slotTile, value, pace);
-
     slotTile.classList.remove('pending');
-    slotTile.classList.add(cls(value));
-    state.days.push(value);
-    state.total += value;
+    slotTile.classList.add(cls(pick.value));
+    state.days.push(pick.value);
+    state.total += pick.value;
     slot.querySelector('.cum').textContent = `Σ ${state.total}`;
 
-    poolView.highlight(value);
-
+    poolView.highlight(pick.value);
     $('total').textContent = state.total;
-    $('progress').firstElementChild.style.width = Math.min(100, (state.total / GOAL) * 100) + '%';
+    $('progress').firstElementChild.style.width = Math.min(100, (state.total / params.items) * 100) + '%';
 
-    if (state.total >= GOAL) {
+    if (state.total >= params.items) {
       state.done = true;
       slot.classList.add('last');
       $('progress').classList.add('done');
@@ -160,33 +221,64 @@
         `Goal reached after <b>${state.days.length} days</b>. That's one possible future. Draw again for another.`,
         true
       );
-    } else {
-      const msg =
-        value === 0
-          ? 'Drew a <b>0</b> day: nothing finished. Total still ' + state.total + '.'
-          : `Drew a day with <b>${value}</b> completed issue${value === 1 ? '' : 's'}. Total is now ${state.total}.`;
-      setStatus(msg);
+    } else if (!quiet) {
+      setStatus(dayStatus(pick.value));
     }
-    state.busy = false;
+  }
+
+  async function drawDay() {
+    if (state.busy) return;
+    if (state.done) resetRun();
+    setBusy(true);
+    try {
+      const pick = pickDay();
+      const slot = addSlot(pick);
+      setStatus(`Day ${state.days.length + 1}: picking a random day from the pool…`);
+      await animateDay(pick, slot, MC.PACE_MANUAL);
+      applyDay(pick, slot, false);
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function autoPlay() {
     if (state.auto) { state.auto = false; return; }
     if (state.busy) return;
+    if (state.done) resetRun();
     state.auto = true;
+    setBusy(true);
     $('btn-auto').firstChild.textContent = 'Pause ';
-    do {
-      await drawDay(true);
-      await sleep(120);
-    } while (state.auto && !state.done);
-    state.auto = false;
-    $('btn-auto').firstChild.textContent = 'Auto-play one run ';
+    const pace = MC.pacing(expectedDays());
+    try {
+      while (state.auto && !state.done) {
+        let last = null;
+        for (let k = 0; k < pace.daysPerTick && !state.done; k++) {
+          const pick = pickDay();
+          const slot = addSlot(pick);
+          last = pick;
+          if (pace.mode === 'instant') {
+            markPicked(pick.idx);
+          } else {
+            setStatus(`Day ${state.days.length + 1}: picking a random day from the pool…`);
+            await animateDay(pick, slot, pace);
+          }
+          applyDay(pick, slot, pace.mode === 'instant');
+        }
+        if (pace.mode === 'instant' && !state.done && last) setStatus(dayStatus(last.value));
+        if (!state.done) await sleep(pace.gapMs);
+      }
+    } finally {
+      state.auto = false;
+      setBusy(false);
+      $('btn-auto').firstChild.textContent = 'Auto-play one run ';
+    }
   }
 
   // ---------------- bulk simulation ----------------
   function simulateOnce() {
+    const cap = Math.max(10000, Math.ceil((params.items / MEAN) * 5));
     let total = 0, days = 0;
-    while (total < GOAL && days < 10000) {
+    while (total < params.items && days < cap) {
       total += POOL[rand(POOL.length)];
       days++;
     }
@@ -200,49 +292,52 @@
   }
 
   // ---------------- histogram ----------------
-  const histEl = $('hist');
-  const axisEl = $('hist-axis');
-  const metaEl = $('hist-meta');
+  function drawTriangle(answer) {
+    MC.renderTriangle($('triangle'), {
+      solve: 'days', items: params.items, days: params.days, confidence: params.confidence,
+      answer, pool: POOL
+    });
+  }
 
   function renderHist() {
     const r = state.results;
+    const metaEl = $('hist-meta');
     if (r.length === 0) {
-      histEl.innerHTML =
-        '<span class="hist-empty">Each finished run adds a result here. Click "Run 1,000 simulations" to see the shape emerge.</span>';
-      axisEl.innerHTML = '';
+      MC.renderHistogram({ histEl: $('hist'), axisEl: $('hist-axis'), results: r });
+      $('legend-text').textContent = `the ${params.confidence}% of runs that finish soonest`;
       metaEl.innerHTML = '';
+      drawTriangle(undefined);
       return;
     }
     const sorted = [...r].sort((a, b) => a - b);
-    const lo = sorted[0], hi = sorted[sorted.length - 1];
-    const p50 = MC.percentileAsc(sorted, 50), p85 = MC.percentileAsc(sorted, 85), p95 = MC.percentileAsc(sorted, 95);
+    const threshold = MC.percentileAsc(sorted, params.confidence);
 
-    const bins = {};
-    r.forEach((d) => (bins[d] = (bins[d] || 0) + 1));
-    const maxCount = Math.max(...Object.values(bins));
-    const labelEvery = Math.ceil((hi - lo + 1) / 22);
+    MC.renderHistogram({
+      histEl: $('hist'), axisEl: $('hist-axis'), results: r,
+      anchor: threshold + 1,
+      classFor: (bin) => (bin.hi <= threshold ? 'in' : ''),
+      marker: { value: threshold + 1, label: `← ${params.confidence}% of runs`, side: 'left' }
+    });
+    $('legend-text').textContent = `runs finished within ${threshold} days (${params.confidence}%)`;
 
-    let bars = '', labels = '';
-    for (let d = lo; d <= hi; d++) {
-      const c = bins[d] || 0;
-      const h = (c / maxCount) * 100;
-      bars += `<div class="col ${d <= p85 ? 'in85' : ''}" title="${d} days: ${c} run${c === 1 ? '' : 's'}"><div class="b" style="height:${h}%"></div></div>`;
-      labels += `<span>${(d - lo) % labelEvery === 0 ? d : ''}</span>`;
+    let html = `<div><b>${r.length.toLocaleString()}</b> simulated run${r.length === 1 ? '' : 's'}</div>`;
+    if (r.length >= 20) {
+      const ps = [...new Set([50, params.confidence, 95])].sort((a, b) => a - b);
+      html += ps.map((p) =>
+        `<div${p === params.confidence ? ' class="primary-stat"' : ''}>${p}% finish within <b>${MC.percentileAsc(sorted, p)}</b> days</div>`
+      ).join('');
+      const url = MC.pageUrl('probability', { ...params, days: threshold });
+      html += `<a class="next-corner" href="${url}">What are the odds of ${params.items} items in ${threshold} days? →</a>`;
+      drawTriangle(threshold);
+    } else {
+      html += '<div class="muted">Run more simulations to see percentiles.</div>';
+      drawTriangle(undefined);
     }
-    histEl.innerHTML = bars;
-    axisEl.innerHTML = labels;
-
-    metaEl.innerHTML =
-      `<div><b>${r.length.toLocaleString()}</b> simulated run${r.length === 1 ? '' : 's'}</div>` +
-      (r.length >= 20
-        ? `<div>50% finish within <b>${p50}</b> days</div>` +
-          `<div>85% finish within <b>${p85}</b> days</div>` +
-          `<div>95% finish within <b>${p95}</b> days</div>`
-        : `<div style="color:var(--muted)">Run more simulations to see percentiles.</div>`);
+    metaEl.innerHTML = html;
   }
 
   // ---------------- wiring ----------------
-  $('btn-draw').onclick = () => drawDay(false);
+  $('btn-draw').onclick = () => drawDay();
   $('btn-auto').onclick = autoPlay;
   $('btn-many').onclick = () => runMany(1000);
   $('btn-reset').onclick = () => {
@@ -251,20 +346,23 @@
     resetRun();
     state.results = [];
     renderHist();
-    poolView.clear();
-    setStatus('Press <b>Space</b> or click "Draw a day" to simulate the first future day.');
+    setStatus(INITIAL_STATUS);
   };
   window.addEventListener('keydown', (e) => {
+    if (MC.isTypingTarget(e)) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     const k = e.key.toLowerCase();
-    if (e.code === 'Space') { e.preventDefault(); drawDay(false); }
+    if (e.code === 'Space') { e.preventDefault(); drawDay(); }
     else if (k === 'a') autoPlay();
     else if (k === 'm') runMany(1000);
     else if (k === 'r') $('btn-reset').click();
   });
 
+  syncParamUi();
   resetRun();
+  setStatus(INITIAL_STATUS);
   renderHist();
+  MC.writeParams(params);
 })();
 </script>
 </body>

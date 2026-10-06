@@ -58,7 +58,11 @@
   }
 
   function writeParams(p) {
-    history.replaceState(null, '', '?' + serializeParams(p));
+    try {
+      history.replaceState(null, '', '?' + serializeParams(p));
+    } catch (_) {
+      // Some browsers refuse replaceState on file:// URLs; the URL is a nicety.
+    }
   }
 
   function pageUrl(page, p) {
