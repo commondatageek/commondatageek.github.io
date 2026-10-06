@@ -96,6 +96,9 @@
   }
   .card .go::after { content: " \2192"; }
 
+  .intro { margin: 0 0 2rem; color: var(--ink); max-width: 38rem; }
+  .cards { display: grid; gap: 1rem; }
+
   .tip {
     margin-top: 1.2rem;
     font-size: .95rem; color: var(--muted);
@@ -129,20 +132,47 @@
     <i class="v4"></i><i class="v1"></i><i class="v3"></i><i class="v5"></i>
   </div>
 
+  <h2>The iron triangle</h2>
+  <p class="intro">
+    Items (scope), days (time), engineers (cost): pin all three and the
+    question becomes how <em>confident</em> you can be. These demos keep the
+    whole team fixed and simulate whichever of days, items, or confidence you
+    leave open.
+  </p>
+
   <h2>Demos</h2>
-  <a class="card" href="sim-days.html">
-    <h3>Monte Carlo Throughput Simulation</h3>
-    <p>
-      Sample random days from your past throughput, add them up until the work
-      is done, repeat it 1,000 times, and watch the distribution of
-      finish dates emerge.
-    </p>
-    <span class="go">Open the simulation</span>
-  </a>
+  <div class="cards">
+    <a class="card" href="sim-days.html">
+      <h3>How many days?</h3>
+      <p>
+        Sample random days from your past throughput, add them up until the
+        work is done, repeat it 1,000 times, and watch the distribution of
+        finish dates emerge.
+      </p>
+      <span class="go">Forecast the days</span>
+    </a>
+    <a class="card" href="sim-items.html">
+      <h3>How many items?</h3>
+      <p>
+        Fix the calendar, then replay it 1,000 times to see how much work fits
+        &mdash; and how many items you can promise at a given confidence.
+      </p>
+      <span class="go">Forecast the items</span>
+    </a>
+    <a class="card" href="sim-probability.html">
+      <h3>What are the odds?</h3>
+      <p>
+        Fix both the scope and the deadline, then count how many simulated
+        futures make it. That share is your probability.
+      </p>
+      <span class="go">Find the odds</span>
+    </a>
+  </div>
   <p class="tip">
     Tip: click <kbd>Draw a day</kbd> (or press <kbd>Space</kbd>) a few times
     by hand first, then try <kbd>A</kbd> to auto-play a run and <kbd>M</kbd>
-    to run 1,000 simulations.
+    to run 1,000 simulations. Change the numbers in the inputs at the top of each
+    demo page to ask a different question.
   </p>
 
   <footer>
