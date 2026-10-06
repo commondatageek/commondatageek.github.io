@@ -148,3 +148,91 @@ pre.logic .f { color: #8fc2ff; }
   position: absolute; z-index: 50; pointer-events: none; margin: 0;
   box-shadow: 0 6px 18px rgba(20, 40, 80, .35); border-color: #ff8a1f;
 }
+
+/* =====================================================================
+   Forecasting-triangle additions
+   ===================================================================== */
+:root { --miss: #e7a1aa; }
+
+/* header: title on the left, triangle nav on the right */
+header.has-triangle { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; }
+header.has-triangle .header-text { flex: 1; min-width: 0; }
+
+nav.triangle { flex: none; width: 13rem; text-align: center; }
+nav.triangle svg { width: 100%; height: auto; display: block; overflow: visible; }
+nav.triangle .edges { fill: none; stroke: var(--line); stroke-width: 3; stroke-linejoin: round; }
+nav.triangle .lbl { font-size: 11px; font-weight: 700; letter-spacing: .08em; fill: var(--muted); }
+nav.triangle .lbl-sub { font-size: 10px; letter-spacing: .04em; fill: #9aa4b2; }
+nav.triangle .val { font-size: 15px; font-weight: 700; fill: var(--ink); }
+nav.triangle .node circle { fill: #fff; stroke: var(--accent); stroke-width: 2.5; transition: fill .15s; }
+nav.triangle a.node { cursor: pointer; }
+nav.triangle a.node:hover circle, nav.triangle a.node:focus-visible circle { fill: var(--accent-soft); }
+nav.triangle .node.solved circle { fill: var(--accent); }
+nav.triangle .node.solved .val { fill: #fff; }
+nav.triangle .node.pulse circle { animation: tri-pulse 1.4s ease-in-out infinite; }
+nav.triangle .node.fixed circle { fill: #eef2f7; stroke: var(--line); stroke-dasharray: 4 3; }
+nav.triangle .node.fixed .val { fill: var(--muted); font-weight: 600; }
+@keyframes tri-pulse {
+  0%, 100% { stroke: var(--accent); stroke-width: 2.5; }
+  50% { stroke: #8fb3ee; stroke-width: 6; }
+}
+.triangle-note { margin: .2rem 0 0; font-size: .8rem; line-height: 1.35; color: var(--muted); }
+
+/* parameter inputs */
+.params { display: flex; gap: 1rem; align-items: center; padding-right: .8rem; margin-right: .2rem; border-right: 1px solid var(--line); }
+.params label { display: inline-flex; align-items: center; gap: .45rem; font-weight: 600; font-size: 1rem; }
+.params input {
+  font: inherit; width: 5rem; padding: .45rem .5rem; border-radius: .5rem;
+  border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+}
+.params input:disabled { opacity: .55; cursor: not-allowed; }
+
+/* shared copy */
+.explainer { margin: -.55rem 0 .9rem; color: var(--ink); font-size: .98rem; background: var(--accent-soft); padding: .5rem .8rem; border-radius: .5rem; }
+p.cli { margin: .9rem 0 0; color: var(--muted); font-size: .9rem; }
+p.cli code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--ink); word-break: break-word; }
+
+/* run status: miss variant */
+#status.miss { background: #fbe3e6; color: #8a1c2b; }
+
+/* slots: pending placeholders, goal marker, and density */
+.slot.goal-hit .tile { outline: 2px solid var(--good); }
+.slot.goal-hit .lbl { color: var(--good); font-weight: 700; }
+#slots.compact { gap: .3rem; }
+#slots.compact .slot { width: 2.3rem; }
+#slots.compact .slot .lbl, #slots.compact .slot .cum { display: none; }
+#slots.compact .slot .tile { font-size: .9rem; border-radius: .3rem; }
+#slots.dense { gap: .18rem; }
+#slots.dense .slot { width: 1rem; }
+#slots.dense .slot .lbl, #slots.dense .slot .cum { display: none; }
+#slots.dense .slot .tile { font-size: 0; border-radius: .2rem; border-width: 1px; }
+#slots.compact .slot.last .tile, #slots.dense .slot.last .tile { outline: 2px solid var(--good); }
+
+/* histogram: highlight classes and threshold marker */
+#hist { position: relative; }
+#hist .col.in .b { background: var(--accent); }
+#hist .col.ok .b { background: var(--good); }
+#hist .col.miss .b { background: var(--miss); }
+#hist .marker { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed var(--ink); pointer-events: none; }
+#hist .marker-label {
+  position: absolute; top: 0; white-space: nowrap; font-size: .85rem; font-weight: 700; color: var(--ink);
+  background: rgba(255, 255, 255, .85); padding: 0 .35rem; border-radius: .3rem;
+}
+#hist .marker-label.left { right: .35rem; }
+#hist .marker-label.right { left: .35rem; }
+#hist .marker-label.flip { right: .35rem; }
+
+.hist-meta .primary-stat { font-size: 1.15rem; }
+.hist-meta .primary-stat b { font-size: 1.7rem; }
+.hist-meta .muted { color: var(--muted); }
+.legend.two { gap: 1rem; }
+.legend .sw { display: inline-flex; align-items: center; gap: .4rem; }
+.legend i.good { background: var(--good); }
+.legend i.miss { background: var(--miss); }
+
+/* "close the triangle" callouts */
+.next-corner {
+  display: inline-block; align-self: center; padding: .4rem .9rem; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 1rem; text-decoration: none;
+}
+.next-corner:hover, .next-corner:focus-visible { background: var(--accent); color: #fff; outline: none; }
