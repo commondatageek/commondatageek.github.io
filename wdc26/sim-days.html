@@ -327,7 +327,7 @@
         `<div${p === params.confidence ? ' class="primary-stat"' : ''}>${p}% finish within <b>${MC.percentileAsc(sorted, p)}</b> days</div>`
       ).join('');
       const url = MC.pageUrl('probability', { ...params, days: threshold });
-      html += `<a class="next-corner" href="${url}">What are the odds of ${params.items} items in ${threshold} days? →</a>`;
+      html += `<a class="next-corner" href="${url}">What are the odds of ${MC.plural(params.items, 'item')} in ${MC.plural(threshold, 'day')}? →</a>`;
       drawTriangle(threshold);
     } else {
       html += '<div class="muted">Run more simulations to see percentiles.</div>';

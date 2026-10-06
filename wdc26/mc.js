@@ -24,6 +24,7 @@
   const cls = (v) => 'v' + Math.min(v, 5);
   const mean = (pool) => pool.reduce((a, b) => a + b, 0) / pool.length;
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
   // ---------------- params / URL ----------------
   function parseIntParam(raw, key) {
@@ -267,7 +268,9 @@
     const p = { items: o.items, days: o.days, confidence: o.confidence, pool: o.pool };
     const known = o.answer != null;
     if (known) {
-      p[o.solve] = o.solve === 'confidence' ? clamp(Math.floor(o.answer), 1, 99) : o.answer;
+      p[o.solve] = o.solve === 'confidence'
+        ? clamp(Math.floor(o.answer), 1, 99)
+        : clamp(o.answer, LIMITS[o.solve][0], LIMITS[o.solve][1]);
     }
 
     const node = (key, cx, cy, value, target, tip) => {
@@ -317,7 +320,7 @@
 
   global.MC = {
     DEFAULT_POOL, DEFAULTS, LIMITS,
-    rand, sleep, cls, mean,
+    rand, sleep, cls, mean, plural,
     readParams, writeParams, pageUrl,
     mountPool,
     PACE_MANUAL, pacing, flicker, fly, slotDensity,
