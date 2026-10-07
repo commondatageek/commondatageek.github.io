@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo: Forecasting Q4 from Linear · WDC-US 2026</title>
+<meta name="description" content="A step-by-step walkthrough of the live demo from my WDC-US 2026 talk: forecasting a quarter's work from real Linear data with Monte Carlo simulation.">
+<meta property="og:title" content="Demo: Forecasting Q4 from Linear (WDC-US 2026)">
+<meta property="og:description" content="A step-by-step walkthrough of forecasting a quarter's work from real Linear data with Monte Carlo simulation.">
+<meta property="og:type" content="article">
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --panel: #ffffff;
+    --ink: #1c2430;
+    --muted: #6b7686;
+    --line: #d9e0ea;
+    --accent: #1b5fd1;
+    --accent-soft: #e3edff;
+    --good: #14915b;
+    --cmd-bg: #eef4ff;
+    --cmd-line: #c7d8f5;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+  }
+  main {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 3rem;
+  }
+
+  .back { display: inline-block; margin-bottom: 1.5rem; color: var(--accent); text-decoration: none; font-weight: 600; }
+  .back::before { content: "\2190  "; }
+  .back:hover { text-decoration: underline; }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-soft);
+    padding: .25rem .7rem; border-radius: 999px;
+  }
+  h1 {
+    margin: 1rem 0 .5rem;
+    font-size: clamp(2rem, 6vw, 2.7rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .lede { margin: 0 0 1.5rem; font-size: 1.15rem; color: var(--muted); max-width: 40rem; }
+
+  nav.toc {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 1rem;
+    padding: 1rem 1.4rem; margin: 0 0 2.5rem;
+  }
+  nav.toc b { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  nav.toc ol { margin: .4rem 0 0; padding-left: 1.3rem; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  nav.toc .runs { color: var(--muted); font-size: .9rem; }
+
+  section { margin-top: 3rem; }
+  h2 {
+    margin: 0 0 .8rem;
+    font-size: 1.6rem; letter-spacing: -0.01em; line-height: 1.2;
+    scroll-margin-top: 1rem;
+  }
+  h2 .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2rem; height: 2rem; border-radius: 50%; vertical-align: .15rem;
+    background: var(--accent); color: #fff; font-size: 1rem; font-weight: 700; margin-right: .6rem;
+  }
+  p { margin: .8rem 0; }
+
+  code {
+    font-family: var(--mono); font-size: .9em;
+    background: #eaeff6; padding: .05rem .3rem; border-radius: .3rem;
+  }
+
+  /* ---------- run labels ---------- */
+  .run {
+    display: flex; align-items: center; gap: .6rem;
+    margin: 1.8rem 0 .4rem;
+    font-weight: 700; font-size: 1.05rem;
+    scroll-margin-top: 1rem;
+  }
+  .run .tag {
+    flex: none;
+    font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: #fff; background: var(--accent);
+    padding: .2rem .6rem; border-radius: 999px;
+  }
+
+  /* ---------- code blocks (all light) ---------- */
+  pre {
+    margin: .6rem 0 1rem; padding: 1.8rem 1.1rem .9rem;
+    border-radius: .7rem; font-size: .95rem; line-height: 1.55;
+    font-family: var(--mono); overflow-x: auto;
+    position: relative; color: var(--ink);
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  pre::before {
+    position: absolute; top: .45rem; left: 1.1rem;
+    font-family: var(--sans);
+    font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  pre .c { color: var(--muted); }
+
+  pre.cmd {
+    background: var(--cmd-bg);
+    border: 1px solid var(--cmd-line); border-left: 4px solid var(--accent);
+  }
+  pre.cmd::before { content: "Command"; color: var(--accent); }
+
+  pre.out {
+    background: var(--panel);
+    border: 1px solid var(--line); border-left: 4px solid #aab6c6;
+  }
+  pre.out::before { content: "Output (from rehearsal; yours will vary slightly)"; }
+
+  pre.file, pre.setup {
+    background: #f7f9fc;
+    border: 1px dashed #b8c4d4;
+  }
+  pre.file::before { content: attr(data-name); text-transform: none; letter-spacing: .02em; font-family: var(--mono); font-size: .8rem; }
+  pre.setup::before { content: "One-time setup"; }
+
+  pre .hl { background: #fff1c2; color: #5a3d00; font-weight: 700; border-radius: .2rem; padding: 0 .15rem; }
+
+  .copy {
+    position: absolute; top: .4rem; right: .5rem;
+    font: inherit; font-family: var(--sans); font-size: .8rem; font-weight: 600;
+    padding: .2rem .65rem; border-radius: .4rem; cursor: pointer;
+    border: 1px solid var(--cmd-line); background: #fff; color: var(--accent);
+  }
+  .copy:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .copy.done { background: var(--good); color: #fff; border-color: var(--good); }
+
+  figure { margin: 1.2rem 0; }
+  figure img {
+    display: block; width: 100%; height: auto;
+    border: 1px solid var(--line); border-radius: .7rem; background: #fff;
+  }
+  figcaption { margin-top: .4rem; font-size: .9rem; color: var(--muted); }
+
+  .aside {
+    margin: 1.2rem 0; padding: .8rem 1rem;
+    background: var(--accent-soft); border-radius: .6rem;
+    font-size: .97rem;
+  }
+  .aside b:first-child { color: var(--accent); }
+
+  .callout {
+    margin: 1.4rem 0; padding: 1rem 1.2rem;
+    background: var(--panel); border: 1px solid var(--line); border-radius: .8rem;
+    font-size: 1.1rem;
+  }
+  .callout strong { color: var(--accent); font-size: 1.35rem; }
+
+  table.recap { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .97rem; background: var(--panel); border-radius: .7rem; overflow: hidden; border: 1px solid var(--line); }
+  table.recap th, table.recap td { text-align: left; padding: .55rem .8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.recap th { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: #f0f4f9; }
+  table.recap tr:last-child td { border-bottom: none; }
+  table.recap td.n { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+  table.recap small { color: var(--muted); font-weight: 400; }
+
+  a { color: var(--accent); }
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+    font-size: .9rem; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html">All resources</a>
+  <br>
+  <span class="eyebrow">WDC-US 2026 &middot; Live demo</span>
+  <h1>Forecasting Q4 from Linear</h1>
+  <p class="lede">
+    The demo from the talk, step by step: pull a team's real history out of
+    Linear, then ask the three questions of the iron triangle (how many
+    items, how many days, what are the odds) about our actual Q4 commitments.
+    Every command is numbered and has a <b>Copy</b> button.
+  </p>
+
+  <nav class="toc" aria-label="Contents">
+    <b>Contents</b>
+    <ol>
+      <li><a href="#export">Export data from Linear</a> <span class="runs">(run 1)</span></li>
+      <li><a href="#items">How many items for Q4?</a> <span class="runs">(runs 2&ndash;5)</span></li>
+      <li><a href="#days">How many days?</a> <span class="runs">(runs 6&ndash;7)</span></li>
+      <li><a href="#probability">What's the probability of getting all 86 done by the end of Q4?</a> <span class="runs">(run 8)</span></li>
+      <li><a href="#recap">Recap</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================ -->
+  <section>
+    <h2 id="export"><span class="num">1</span>Export data from Linear</h2>
+
+<pre class="setup"><code><span class="c"># in .bashrc, .zshrc, etc.</span>
+export LINEAR_API_KEY=lin_api_...</code></pre>
+
+    <div class="run" id="run-1"><span class="tag">Run 1</span>Sync the DATA team from Linear</div>
+<pre class="cmd"><code>forecast linear sync -db data.db -teams data</code></pre>
+
+<pre class="out"><code>INFO  full sync (new team): team=DATA
+INFO  upserted: team=DATA count=2131 trashed-skipped=24</code></pre>
+
+    <p>
+      You now have a sqlite3 database, which means that you can do lots of
+      interesting analysis, including with an agent who can write Python to
+      calculate things and draw visuals for you.
+    </p>
+    <p class="aside">
+      <b>Not on Linear?</b> Every <code>forecast</code> command below also
+      accepts a CSV or JSON export via <code>-input</code>. All it really needs
+      is when each issue was created, started, and completed.
+    </p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section>
+    <h2 id="items"><span class="num">2</span>How many items for Q4?</h2>
+    <p>First, let's open up Linear and see what projects we've agreed to for Q4:</p>
+
+    <figure>
+      <img src="linear-q4-projects.png" width="1283" height="549"
+           alt="Linear's project list for the Data Infrastructure team, filtered to projects targeting H2 2026: Dentrix Ascend on Integrations Platform - Adoption (0 issues), SQL Anomaly Detection M2 (16), SQL Anomaly Detection M1 (12), Audit Logging Framework Milestone 2 (7), Cloud Workers: Dentrix Ascend on Integrations Platform (22), and Pipeline Tooling for Ingest Platform (127, 85% complete).">
+      <figcaption>Our Q4 projects in Linear.</figcaption>
+    </figure>
+
+    <p>
+      This command shows how many non-terminal items (backlog, unstarted,
+      started) are left in each project that has been updated recently:
+    </p>
+
+    <div class="run" id="run-2"><span class="tag">Run 2</span>Count what's left in each project</div>
+<pre class="cmd"><code>forecast count -input data.db</code></pre>
+
+<pre class="out"><code>PROJECT                                                             ISSUES
+Cloud Workers : Dentrix Ascend on Integrations Platform             22
+Pipeline Tooling for Ingest Platform                                19
+Audit Logging Framework Milestone 2                                 7
+SQL Anomaly Detection M2: Anomaly Detection                         16
+SQL Anomaly Detection M1: Operator Rebuild and Metrics Restoration  12</code></pre>
+
+    <p class="aside">
+      <b>Why 19, not 127?</b> Linear's <em>Issues</em> column counts every
+      issue in the project, including finished ones. <code>forecast count</code>
+      only counts what's left. <em>Pipeline Tooling</em> is 85% done, so only
+      19 of its 127 issues remain.
+    </p>
+
+    <p>
+      Okay, so that's <b>76 issues</b> listed here. That's our current
+      understanding of scope for these Q4 projects.
+    </p>
+    <p>
+      Now, what's our forecasted capacity for Q4? How many items can our team
+      expect to complete in Q4 based on our recent throughput history?
+    </p>
+    <p>Let's see, there's 92 days in Q4.</p>
+
+    <div class="run" id="run-3"><span class="tag">Run 3</span>Q4 capacity: 92 days</div>
+<pre class="cmd"><code>forecast sim items \
+  -input data.db \
+  -whole-team \
+  -days 92 \
+  -sample-start "-3 months" \
+  -simulations 10000000</code></pre>
+
+<pre class="out"><code>whole-team throughput, 2026-10-08 to 2027-01-07 (92 days) -> how many items?
+
+Confidence  Items
+50%         at least 96
+75%         at least 86
+<span class="hl">85%         at least 81</span>
+95%         at least 72</code></pre>
+
+    <p class="aside">
+      <b>Reading the flags:</b> <code>-whole-team</code> adds up the whole
+      team's daily completions instead of modeling individual engineers.
+      <code>-sample-start "-3 months"</code> builds the pool from the last three
+      months of throughput. <code>-simulations 10000000</code> replays the
+      future ten million times. Want to see how one of those replays works?
+      Try the <a href="sim-items.html">How many items?</a> interactive demo.
+    </p>
+
+    <p>
+      But today is already October 7. So we don't have 92 days (look at the
+      output: that window runs into January). Instead let's use
+      <code>-target-start-date tomorrow</code> and
+      <code>-target-end-date 2026-12-31</code>.
+    </p>
+
+    <div class="run" id="run-4"><span class="tag">Run 4</span>Q4 capacity: tomorrow through Dec 31</div>
+<pre class="cmd"><code>forecast sim items \
+  -input data.db \
+  -sample-start "-3 months" \
+  -simulations 10000000 \
+  -whole-team \
+  -target-start-date tomorrow \
+  -target-end-date "2026-12-31"</code></pre>
+
+<pre class="out"><code>whole-team throughput, 2026-10-08 to 2026-12-31 (85 days) -> how many items?
+
+Confidence  Items
+50%         at least 88
+75%         at least 79
+<span class="hl">85%         at least 74</span>
+95%         at least 66</code></pre>
+
+    <p>Okay, 85% confident to commit to at least 74 items. So far so good!</p>
+
+    <p>But what about WDC and company holidays and deploy freezes?</p>
+
+<pre class="file" data-name="exclusions.json"><code>{
+  "global": [
+    {"from": "2026-10-07", "to": "2026-10-08", "reason": "WDC26 Deploy Freeze"},
+    {"from": "2026-11-07", "to": "2026-11-09", "reason": "Diwali Deploy Freeze"},
+    {"from": "2026-11-25", "to": "2026-11-29", "reason": "Thanksgiving Deploy Freeze"},
+    {"from": "2026-12-18", "to": "2027-01-04", "reason": "Winter Holidays Deploy Freeze"},
+
+    {"date": "2026-11-26", "reason": "Thanksgiving (US Holiday)"},
+    {"date": "2026-11-27", "reason": "Day after Thanksgiving (US Holiday)"},
+    {"date": "2026-12-24", "reason": "Christmas Eve (US Holiday)"},
+    {"date": "2026-12-25", "reason": "Christmas Day (US Holiday)"},
+    {"date": "2026-12-31", "reason": "New Year's Eve (US Holiday)"},
+    {"date": "2027-01-01", "reason": "New Year's Day (US Holiday)"}
+  ]
+}</code></pre>
+
+    <p class="aside">
+      <b>How exclusions work:</b> an excluded day in the forecast window
+      still counts on the calendar, but it contributes zero completions. If an
+      excluded day also falls in the three-month sample window, it gets dropped
+      from the pool, so a past holiday doesn't drag your throughput down twice.
+    </p>
+
+    <div class="run" id="run-5"><span class="tag">Run 5</span>Q4 capacity: with holidays and deploy freezes</div>
+<pre class="cmd"><code>forecast sim items \
+  -input data.db \
+  -sample-start "-3 months" \
+  -simulations 10000000 \
+  -whole-team \
+  -target-start-date tomorrow \
+  -target-end-date "2026-12-31" \
+  -exclusions exclusions.json</code></pre>
+
+<pre class="out"><code>whole-team throughput, 2026-10-08 to 2026-12-31 (85 days) -> how many items?
+
+Confidence  Items
+50%         at least 65
+75%         at least 57
+<span class="hl">85%         at least 53</span>
+95%         at least 46</code></pre>
+
+    <p>
+      Oof! Okay, that went down from 74 to 53. 85% confident we can commit to
+      at least 53 items.
+    </p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section>
+    <h2 id="days"><span class="num">3</span>How many days?</h2>
+    <p>Okay, so 53 is our team's forecasted capacity (in Linear issues) for Q4.</p>
+    <p>
+      When do we think we'd actually be able to get 76 issues done by? What's
+      a plausible end date for this work?
+    </p>
+
+    <div class="run" id="run-6"><span class="tag">Run 6</span>Finish date for 76 items</div>
+<pre class="cmd"><code>forecast sim days \
+  -input data.db \
+  -sample-start "-3 months" \
+  -simulations 10000000 \
+  -whole-team \
+  -target-start-date tomorrow \
+  -items 76 \
+  -exclusions exclusions.json</code></pre>
+
+<pre class="out"><code>whole-team throughput, 76 items -> how many days?
+
+Confidence  Days  Date
+50%         100   2027-01-16 Sat
+75%         108   2027-01-24 Sun
+<span class="hl">85%         113   2027-01-29 Fri</span>
+95%         122   2027-02-07 Sun</code></pre>
+
+    <p>So that's looking more like towards the end of January.</p>
+
+    <p>
+      And actually, there was one project shown in Linear that we committed
+      to, and it didn't have any tickets in it (<em>Dentrix Ascend on
+      Integrations Platform - Adoption</em>, with 0 issues). Let's just put a
+      number in there for now. 10?
+    </p>
+    <p class="aside">
+      <b>Unknown scope is still scope.</b> An empty project doesn't mean zero
+      work. It means we haven't broken it down yet. A rough guess beats
+      leaving it out, and you can re-run the forecast once the tickets exist.
+    </p>
+
+    <p>Let's re-run with 86 items:</p>
+
+    <div class="run" id="run-7"><span class="tag">Run 7</span>Finish date for 86 items</div>
+<pre class="cmd"><code>forecast sim days \
+  -input data.db \
+  -sample-start "-3 months" \
+  -simulations 10000000 \
+  -whole-team \
+  -target-start-date tomorrow \
+  -items 86 \
+  -exclusions exclusions.json</code></pre>
+
+<pre class="out"><code>whole-team throughput, 86 items -> how many days?
+
+Confidence  Days  Date
+50%         109   2027-01-25 Mon
+75%         118   2027-02-03 Wed
+<span class="hl">85%         123   2027-02-08 Mon</span>
+95%         132   2027-02-17 Wed</code></pre>
+
+    <p>Okay, that's looking like halfway into February.</p>
+    <p class="aside">
+      Try the <a href="sim-days.html">How many days?</a> interactive demo to
+      watch where these finish dates come from.
+    </p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section>
+    <h2 id="probability"><span class="num">4</span>So what's the probability of getting all 86 Linear issues done by the end of Q4?</h2>
+    <p>Let's run a probability simulation for 86:</p>
+
+    <div class="run" id="run-8"><span class="tag">Run 8</span>Odds of 86 items by Dec 31</div>
+<pre class="cmd"><code>forecast sim probability \
+  -input data.db \
+  -sample-start "-3 months" \
+  -simulations 10000000 \
+  -whole-team \
+  -target-start-date tomorrow \
+  -target-end-date "2026-12-31" \
+  -items 86 \
+  -exclusions exclusions.json</code></pre>
+
+<pre class="out"><code>whole-team throughput, 2026-10-08 to 2026-12-31 (85 days), 86 items -> probability of completion? <span class="hl">5.5%</span> (i.e. you can commit to 86 items here at ~5% confidence)</code></pre>
+
+    <div class="callout">
+      About a <strong>1 in 18</strong> chance of finishing everything we've
+      committed to for Q4.
+    </div>
+    <p class="aside">
+      Try the <a href="sim-probability.html">What are the odds?</a>
+      interactive demo to see how this number is counted.
+    </p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section>
+    <h2 id="recap"><span class="num">5</span>Recap</h2>
+    <table class="recap">
+      <thead>
+        <tr><th>Question</th><th>Answer</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>How many items can we finish in Q4 (holidays and freezes included)?</td><td class="n">at least 53 <small>(85%)</small></td></tr>
+        <tr><td>When could we finish the 76 issues we know about?</td><td class="n">2027-01-29 <small>(85%)</small></td></tr>
+        <tr><td>When could we finish 86 issues (with the empty project)?</td><td class="n">2027-02-08 <small>(85%)</small></td></tr>
+        <tr><td>What's the chance of all 86 by 2026-12-31?</td><td class="n">5.5%</td></tr>
+      </tbody>
+    </table>
+    <p>
+      None of this needed an estimate from anyone. It's all there in the
+      team's historical throughput. Now the conversation can be about the
+      levers: cut scope, move the date, or decide how much risk we're willing
+      to accept.
+    </p>
+  </section>
+
+  <footer>
+    By Aaron Johnson &middot;
+    <a href="https://github.com/commondatageek">github.com/commondatageek</a>
+    &middot; <a href="index.html">Back to all resources</a>
+  </footer>
+</main>
+<script>
+  // Add a Copy button to every command block.
+  document.querySelectorAll('pre.cmd').forEach((pre) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy';
+    btn.textContent = 'Copy';
+    btn.addEventListener('click', async () => {
+      const text = pre.querySelector('code').innerText.trim();
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      btn.textContent = 'Copied!';
+      btn.classList.add('done');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+    });
+    pre.appendChild(btn);
+  });
+</script>
+</body>
+</html>
